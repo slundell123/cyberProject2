@@ -15,7 +15,7 @@
 
 import socket
 import os
-
+from Crypto.Cipher import AES
 
 host = "localhost"
 port = 10001
@@ -40,13 +40,15 @@ def encrypt_handshake(session_key):
     # TODO: Implement this function
     pass
 
-
+#from https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Encrypts the message using AES. Same as server function
 def encrypt_message(message, session_key):
-    # TODO: Implement this function
-    pass
+    cipher = AES.new(session_key, AES.MODE_EAX)
+    nonce = cipher.nonce #stopping replay attachs with a random number
+    ciphertext, tag = cipher.encrypt_and_digest(message)
+    return (nonce, ciphertext, tag)
 
-
+#NOTE: look at -  https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Decrypts the message using AES. Same as server function
 def decrypt_message(message, session_key):
     # TODO: Implement this function

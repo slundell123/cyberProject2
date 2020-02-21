@@ -14,6 +14,7 @@
 """
 
 import socket
+from Crypto.Cipher import AES
 
 host = "localhost"
 port = 10001
@@ -29,17 +30,19 @@ def decrypt_key(session_key):
     # TODO: Implement this function
     pass
 
-
+#NOTE: look at -  https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Write a function that decrypts a message using the session key
 def decrypt_message(client_message, session_key):
     # TODO: Implement this function
     pass
 
-
+#from https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Encrypt a message using the session key
 def encrypt_message(message, session_key):
-    # TODO: Implement this function
-    pass
+    cipher = AES.new(session_key, AES.MODE_EAX)
+    nonce = cipher.nonce #stopping replay attachs with a random number
+    ciphertext, tag = cipher.encrypt_and_digest(message)
+    return (nonce, ciphertext, tag)
 
 
 # Receive 1024 bytes from the client
