@@ -12,7 +12,9 @@ user = input("Enter a username: ")
 password = input("Enter a password: ")
 
 # TODO: Create a salt and hash the password
-salt = os.urandom(32)
+#32 bit salt
+salt = os.urandom(32) 
+# PKCS#5 password-based key derivation. Takes name of hash, password, salt, and number of interation
 hashed_password = hashlib.pbkdf2_hmac('sha256', 'mypassword'.encode('utf-8'), salt, 100000)
 
 
