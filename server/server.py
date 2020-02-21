@@ -33,8 +33,9 @@ def decrypt_key(session_key):
 #NOTE: look at -  https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Write a function that decrypts a message using the session key
 def decrypt_message(client_message, session_key):
-    # TODO: Implement this function
-    pass
+    cipher = AES.new(session_key, AES.MODE_EAX, nonce=nonce)
+    plaintext=cipher.decrypt(ciphertext)
+    return plaintex
 
 '''
 Encryption takes a plain text and converts it to an encrypted text using a 

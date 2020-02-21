@@ -51,8 +51,10 @@ def encrypt_message(message, session_key):
 #NOTE: look at -  https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Decrypts the message using AES. Same as server function
 def decrypt_message(message, session_key):
-    # TODO: Implement this function
-    pass
+    cipher = AES.new(session_key, AES.MODE_EAX, nonce=nonce)
+    plaintext=cipher.decrypt(ciphertext)
+    return plaintext
+
 
 
 # Sends a message over TCP
