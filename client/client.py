@@ -30,7 +30,8 @@ def pad_message(message):
 # TODO: Generate a cryptographically random AES key
 def generate_key():
     # TODO: Implement this function
-    pass
+    # AES-128 has 128 bit key = 16 bytes.
+    return os.urandom(16)
 
 
 # Takes an AES session key and encrypts it using the appropriate
