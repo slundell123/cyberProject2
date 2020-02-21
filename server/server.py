@@ -36,13 +36,23 @@ def decrypt_message(client_message, session_key):
     # TODO: Implement this function
     pass
 
+'''
+Encryption takes a plain text and converts it to an encrypted text using a 
+key and an encryption algorithm. The resulting encrypted text can later be 
+decrypted (by using the same key and algorithm).
+A digest takes a plain text and generates a hashcode which can be used to 
+verify if the plain text is unmodified but cannot be used to decrypt the 
+original text from the hash value.
+'''
 #from https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Encrypt a message using the session key
 def encrypt_message(message, session_key):
     cipher = AES.new(session_key, AES.MODE_EAX)
     nonce = cipher.nonce #stopping replay attachs with a random number
     ciphertext, tag = cipher.encrypt_and_digest(message)
-    return (nonce, ciphertext, tag)
+    # returning random number, encrypted message, and digest (see note
+    # above function for details)
+    return (nonce, ciphertext, tag) 
 
 
 # Receive 1024 bytes from the client
