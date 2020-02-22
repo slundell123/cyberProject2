@@ -38,7 +38,9 @@ def generate_key():
 # key and return the value
 def encrypt_handshake(session_key):
     # TODO: Implement this function
-    f = file.read(client_cert.pub, r)
+    reader = open("client_cert.pub", 'r')
+        for line in reader.read().split('\n'):
+            
     pass
 
 #from https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
