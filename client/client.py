@@ -15,7 +15,8 @@
 
 import socket
 import os
-from Crypto.Cipher import AES
+from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto.PublicKey import RSA
 
 host = "localhost"
 port = 10001
@@ -38,24 +39,28 @@ def generate_key():
 # key and return the value
 def encrypt_handshake(session_key):
     # TODO: Implement this function
-    reader = open("client_cert.pub", 'r')
-        for line in reader:
-            
-    pass
+    recipient_key = RSA.importKey(open('client_cert.pub').read())
+    rsa_cipher= PKCS1_OAEP.new(recipient_key)
+    enc_key=rsa_cipher.encrypt(session_key)
+    return enc_key
+
+
 
 #from https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Encrypts the message using AES. Same as server function
 def encrypt_message(message, session_key):
-    cipher = AES.new(session_key, AES.MODE_EAX)
-    nonce = cipher.nonce #stopping replay attachs with a random number
-    ciphertext, tag = cipher.encrypt_and_digest(message)
-    return (nonce, ciphertext, tag)
+    #print(session_key)
+    cipher = AES.new(session_key, AES.MODE_ECB)
+    #nonce = cipher.nonce #stopping replay attachs with a random number
+    ciphertext= cipher.encrypt(message)
+    return ciphertext
 
 #NOTE: look at -  https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Decrypts the message using AES. Same as server function
 def decrypt_message(message, session_key):
-    cipher = AES.new(session_key, AES.MODE_EAX, nonce=nonce)
-    plaintext=cipher.decrypt(ciphertext)
+    #print(session_key)
+    cipher = AES.new(session_key, AES.MODE_ECB)
+    plaintext=cipher.decrypt(message)
     return plaintext
 
 
@@ -102,8 +107,11 @@ def main():
             exit(0)
 
         # TODO: Encrypt message and send to server
+        print(message)
+        send_message(sock,encrypt_message(pad_message(message),key))
 
         # TODO: Receive and decrypt response from server
+       # print(decrypt_message(receive_message(sock),key))
     finally:
         print('closing socket')
         sock.close()

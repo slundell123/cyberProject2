@@ -14,7 +14,8 @@
 """
 
 import socket
-from Crypto.Cipher import AES
+from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto.PublicKey import RSA
 
 host = "localhost"
 port = 10001
@@ -27,15 +28,18 @@ def pad_message(message):
 
 # Write a function that decrypts a message using the server's private key
 def decrypt_key(session_key):
-    # TODO: Implement this function
-    pass
+    private_key = RSA.importKey(open('client_cert').read())
+    private_cipher=PKCS1_OAEP.new(private_key)
+    message=private_cipher.decrypt(session_key)
+    return message
 
 #NOTE: look at -  https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Write a function that decrypts a message using the session key
 def decrypt_message(client_message, session_key):
-    cipher = AES.new(session_key, AES.MODE_EAX, nonce=nonce)
-    plaintext=cipher.decrypt(ciphertext)
-    return plaintex
+   # print(session_key)
+    cipher = AES.new(session_key, AES.MODE_ECB)
+    plaintext=cipher.decrypt(client_message)
+    return plaintext
 
 '''
 Encryption takes a plain text and converts it to an encrypted text using a 
@@ -48,12 +52,13 @@ original text from the hash value.
 #from https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 # Encrypt a message using the session key
 def encrypt_message(message, session_key):
-    cipher = AES.new(session_key, AES.MODE_EAX)
-    nonce = cipher.nonce #stopping replay attachs with a random number
-    ciphertext, tag = cipher.encrypt_and_digest(message)
+    #print (session_key)
+    cipher = AES.new(session_key, AES.MODE_ECB)
+    #nonce = cipher.nonce #stopping replay attachs with a random number
+    ciphertext= cipher.encrypt(message)
     # returning random number, encrypted message, and digest (see note
     # above function for details)
-    return (nonce, ciphertext, tag) 
+    return ciphertext
 
 
 # Receive 1024 bytes from the client
@@ -119,13 +124,13 @@ def main():
                 ciphertext_message = receive_message(connection)
 
                 # TODO: Decrypt message from client
-
+                message=decrypt_message(ciphertext_message,plaintext_key)
                 # TODO: Split response from user into the username and password
-
+                print("the message: ",message)
                 # TODO: Encrypt response to client
 
                 # Send encrypted response
-                send_message(connection, ciphertext_response)
+               # send_message(connection, ciphertext_response)
             finally:
                 # Clean up the connection
                 connection.close()
