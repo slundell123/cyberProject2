@@ -39,7 +39,7 @@ def generate_key():
 def encrypt_handshake(session_key):
     # TODO: Implement this function
     reader = open("client_cert.pub", 'r')
-        for line in reader.read().split('\n'):
+        for line in reader:
             
     pass
 
