@@ -13,10 +13,9 @@ password = input("Enter a password: ")
 
 # TODO: Create a salt and hash the password
 #32 bit salt
-salt = os.urandom(32) 
+salt = os.urandom(16) 
 # PKCS#5 password-based key derivation. Takes name of hash, password, salt, and number of interation
-hashed_password = hashlib.pbkdf2_hmac('sha256', 'mypassword'.encode('utf-8'), salt, 100000)
-
+hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
 
 try:
     reading = open("passfile.txt", 'r')

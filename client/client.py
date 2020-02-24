@@ -59,7 +59,9 @@ def encrypt_message(message, session_key):
 # Decrypts the message using AES. Same as server function
 def decrypt_message(message, session_key):
     #print(session_key)
+    #print((message))
     cipher = AES.new(session_key, AES.MODE_ECB)
+    #print(cipher)
     plaintext=cipher.decrypt(message)
     return plaintext
 
@@ -107,11 +109,11 @@ def main():
             exit(0)
 
         # TODO: Encrypt message and send to server
-        print(pad_message(message))
         send_message(sock,encrypt_message(pad_message(message),key))
 
         # TODO: Receive and decrypt response from server
-       # print(decrypt_message(receive_message(sock),key))
+        print(receive_message(sock))
+        print(decrypt_message(receive_message(sock),key))
     finally:
         print('closing socket')
         sock.close()
