@@ -88,13 +88,9 @@ def verify_hash(user, password):
             line = line.split("\t")
             if line[0] == user:
                 # TODO: Generate the hashed password
-                salt = line[1]
-                salt = salt.strip('\\x')
-                salt = int(salt, 16)
-                print(salt)
+                salt = line[1].encode("utf-8")
+                #salt = bytes(salt)
                 hashed_password =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-                print(hashed_password)
-                print(line[2])
                 return hashed_password == line[2]
         reader.close()
     except FileNotFoundError:
