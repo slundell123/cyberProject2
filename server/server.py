@@ -138,9 +138,9 @@ def main():
                 # TODO: Encrypt response to client
                 # print("is_true: ",is_true)
                 if(is_true==False):
-                    send_message(connection, "Password or Username incorrect")
+                    send_message(connection,encrypt_message(pad_message("Password or Username incorrect"),plaintext_key))
                 else:
-                    send_message(connection,"User succcessfully authenticated")
+                    send_message(connection,encrypt_message(pad_message("User succcessfully authenticated"),plaintext_key))
                 
                 
                 # send_message(connection, ciphertext_response)
