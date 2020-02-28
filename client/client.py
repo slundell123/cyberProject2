@@ -112,8 +112,8 @@ def main():
         send_message(sock,encrypt_message(pad_message(message),key))
 
         # TODO: Receive and decrypt response from server
-        print(receive_message(sock))
-        print(decrypt_message(receive_message(sock),key))
+        print(receive_message(sock).decode())
+        #print(decrypt_message(receive_message(sock),key))
     finally:
         print('closing socket')
         sock.close()

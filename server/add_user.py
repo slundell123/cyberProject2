@@ -7,6 +7,8 @@
 """
 import os
 import hashlib
+import binascii
+
 
 user = input("Enter a username: ")
 password = input("Enter a password: ")
@@ -14,6 +16,7 @@ password = input("Enter a password: ")
 # TODO: Create a salt and hash the password
 #32 bit salt
 salt = os.urandom(16) 
+print(type(salt))
 # PKCS#5 password-based key derivation. Takes name of hash, password, salt, and number of interation
 hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
 
@@ -28,5 +31,5 @@ except FileNotFoundError:
     pass
 
 with open("passfile.txt", 'a+') as writer:
-    writer.write("{0}\t{1}\t{2}\n".format(user, salt, hashed_password))
+    writer.write("{0}\t{1}\t{2}\n".format(user, binascii.hexlify(salt).decode(), hashed_password))
     print("User successfully added!")

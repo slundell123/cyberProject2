@@ -18,6 +18,7 @@ from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 import os
 import hashlib
+import binascii
 
 host = "localhost"
 port = 10001
@@ -88,10 +89,11 @@ def verify_hash(user, password):
             line = line.split("\t")
             if line[0] == user:
                 # TODO: Generate the hashed password
-                salt = line[1].encode("utf-8")
-                #salt = bytes(salt)
-                hashed_password =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-                return hashed_password == line[2]
+                salt=line[1]
+                salt=binascii.unhexlify(salt)
+                hashed_password =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'),salt , 100000)
+                #print("hashed_password",hashed_password,type(hashed_password),"||line[2]:",line[2],line[2],type(line[2]))
+                return str(hashed_password) == line[2]
         reader.close()
     except FileNotFoundError:
         return False
@@ -131,12 +133,17 @@ def main():
                 plaintext_message=decrypt_message(ciphertext_message,plaintext_key).decode() #.decode needed convert decrypted message from bytes to char
                 # TODO: Split response from user into the username and password
                 credentials=plaintext_message.rstrip().split(' ',1)
-                print("Username: ",credentials[0]," Password: ",credentials[1]) #test decrypted username and password from the client
-                verify_hash(credentials[0], credentials[1])
+                print(credentials[0],credentials[1]) #test decrypted username and password from the client
+                is_true=verify_hash(credentials[0], credentials[1])
                 # TODO: Encrypt response to client
-
-                # Send encrypted response
-               # send_message(connection, ciphertext_response)
+                # print("is_true: ",is_true)
+                if(is_true==False):
+                    send_message(connection, "Password or Username incorrect")
+                else:
+                    send_message(connection,"User succcessfully authenticated")
+                
+                
+                # send_message(connection, ciphertext_response)
             finally:
                 # Clean up the connection
                 connection.close()
